@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8"/>
+    <script src="three.js"></script>
+    <script src="molcar.js"></script>
     <title>hunablog</title>
     <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
     <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
@@ -77,12 +79,11 @@
     </header>
 
     <div class="mdc-top-app-bar--fixed-adjust imgbox">
-        <img class="center-fit" src="bg_image.jpg" alt="neko">
+        <canvas id="myCanvas"></canvas>
     </div>
 </div>
 
 <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
 <script>mdc.autoInit()</script>
 </body>
-<script src="hunablog.js"></script>
 </html>
