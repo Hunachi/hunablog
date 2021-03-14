@@ -11,6 +11,8 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib-js"))
+    val ktorVersion = "1.5.2"
+    implementation("io.ktor:ktor-client-js:$ktorVersion")
 }
 
 kotlin {

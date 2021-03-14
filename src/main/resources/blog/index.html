@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>hunablog</title>
+    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        .hunachi-theme {
+            --mdc-theme-primary: #458766;
+            --mdc-theme-secondary: #BFEB55;
+            --mdc-theme-surface: #FFFFFF;
+        }
+
+        .toolbar-most-right-item {
+            margin-right: 16px;
+        }
+
+        .toolbar-item {
+            margin-right: 8px;
+        }
+
+        body {
+            margin: 0px;
+        }
+
+        .my-card {
+            height: 350px;
+            width: 350px;
+        }
+
+        .list-content {
+            padding-left: 56px;
+            padding-right: 56px;
+            padding-bottom: 24px;
+        }
+
+        .my-card-content {
+            margin-top: 16px;
+            height: auto;
+            width: available;
+        }
+
+        .my-card-primary-text {
+            text-align: left;
+            margin-top: 24px;
+            font-size: xx-large;
+            align-self: start;
+        }
+
+        .my-card-secondary-text {
+            text-align: left;
+            margin-bottom: 16px;
+            margin-top: 8px;
+            font-size: medium;
+            align-self: start;
+            height: max-content;
+        }
+    </style>
+</head>
+<div id="root" class="hunachi-theme">
+    <header class="mdc-top-app-bar" style="top: 0px">
+        <div class="mdc-top-app-bar__row">
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end">
+                <button id="profileToolbarButton" class="mdc-button mdc-top-app-bar__action-item toolbar-item"
+                        onclick="location.href='/profile/index.html'">
+                    <i class="material-icons mdc-button__icon" aria-hidden="true">person</i>
+                    <span class="mdc-button__label">Profile</span>
+                </button>
+                <button id="blogToolbarButton" class="toolbar-most-right-item mdc-button mdc-top-app-bar__action-item"
+                        onclick="location.href='/blog/index.html'">
+                    <i class="material-icons mdc-button__icon" aria-hidden="true">computer</i>
+                    <span class="mdc-button__label">Blog</span>
+                </button>
+            </section>
+        </div>
+    </header>
+
+    <div class="mdc-top-app-bar--fixed-adjust list-content">
+        <ul class="mdc-list mdc-list--two-line">
+            <li class="mdc-list-item mdc-card my-card-content" style="height: 150px" tabindex="0">
+                <span class="mdc-list-item__ripple"></span>
+                <span class="mdc-list-item__text"></span>
+                <span class="my-card-primary-text">First Blog</span>
+                <span class="my-card-secondary-text mdc-list-item__secondary-text">Secondary text</span>
+            </li>
+            <li class="mdc-list-item mdc-card my-card-content" style="height: 150px" tabindex="1">
+                <span class="mdc-list-item__ripple"></span>
+                <span class="mdc-list-item__text"></span>
+                <span class="my-card-primary-text mdc-list-item__primary-text">Second Blog</span>
+                <span class="my-card-secondary-text mdc-list-item__secondary-text">Secondary text</span>
+            </li>
+            <li class="mdc-list-item mdc-card my-card-content" style="height: 150px" tabindex="2">
+                <span class="mdc-list-item__ripple"></span>
+                <span class="mdc-list-item__text"></span>
+                <span class="my-card-primary-text mdc-list-item__primary-text">Third Blog</span>
+                <span class="my-card-secondary-text mdc-list-item__secondary-text">Secondary text</span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+<script>mdc.autoInit()</script>
+<script src="main.js"></script>
+</body>
+<script src="hunablog.js"></script>
+</html>
+
