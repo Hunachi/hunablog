@@ -377,20 +377,101 @@ code {
 それらのコードを省略している為コードをコピペしただけではダメな場合があります．ご了承ください💦</p>
 <h2 id="%E5%BF%85%E8%A6%81%E3%81%AA%E6%A8%A9%E9%99%90%E3%81%AE%E8%A6%81%E6%B1%82">必要な権限の要求</h2>
 <p>まずはAndroidアプリ開発においてお馴染みの権限の要求からです！</p>
-<p>Wi-FiのSSIDを取得するのに必要な権限は<code>ACCESS_NETWORK_STATE</code>と<code>ACCESS_FINE_LOCATION</code>と<code>ACCESS_WIFI_STATE</code> です．
-Foreground Servicesを使うために必要な権限は<code>FOREGROUND_SERVICE</code>です．
-SDKがAndroid Q以上の場合はForeground Servicesでの位置情報を有効にする必要があるので追加で<code>FOREGROUND_SERVICE</code>が必要になります．</p>
+<p>Wi-FiのSSIDを取得するのに必要な権限は<code>ACCESS_NETWORK_STATE</code>と<code>ACCESS_FINE_LOCATION</code>と<code>ACCESS_WIFI_STATE</code> です．</p>
 <p>これらの権限を要求してきましょう．</p>
 <h3 id="%E6%A8%A9%E9%99%90%E3%81%AE%E8%A6%81%E6%B1%82%E6%96%B9%E6%B3%95%E3%81%A8%E5%AE%9F%E9%9A%9B%E3%81%AE%E3%82%B3%E3%83%BC%E3%83%89">権限の要求方法と実際のコード</h3>
 <p><code>AndroidManifest.xml</code>に以下を追加します．</p>
 <pre class="hljs"><code><div>    <span class="hljs-tag">&lt;<span class="hljs-name">uses-permission</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">"android.permission.ACCESS_FINE_LOCATION"</span> /&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">uses-permission</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">"android.permission.ACCESS_BACKGROUND_LOCATION"</span> /&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">uses-permission</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">"android.permission.ACCESS_NETWORK_STATE"</span> /&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">uses-permission</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">"android.permission.ACCESS_WIFI_STATE"</span> /&gt;</span>
+</div></code></pre>
+<p>次に任意のActivity等でユーザーに権限をリクエストするダイアログを出すためのコードを書きます．
+今回は，権限を1つしかリクエストしないので<code>RequestPermission</code>を使います．</p>
+<p>⚠️リクエストが拒否されたときの実装の説明はここでは省くため，<code>TODO</code>と書いてます⚠️</p>
+<pre class="hljs"><code><div>....
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PermissionRequestActivity</span> : <span class="hljs-type">AppCompatActivity</span></span>() {
+....
+     <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">requestPermission</span><span class="hljs-params">()</span></span>{
+        requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+    }
+    
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) {
+        <span class="hljs-keyword">if</span> (it) {
+            <span class="hljs-comment">// Success.</span>
+            <span class="hljs-keyword">return</span><span class="hljs-symbol">@registerForActivityResult</span> 
+        }
+        <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span>Request Permission Again.</span>
+    }
+....
+}
+</div></code></pre>
+<p>次は，本題のWi-Fiの変化を検知していきましょう！</p>
+<h2 id="wi-fi%E3%81%AE%E5%A4%89%E5%8C%96%E3%82%92%E6%A4%9C%E7%9F%A5">Wi-Fiの変化を検知</h2>
+<p><code>ConnectivityManager</code>を使います．</p>
+<p><code>TransportType</code>に<code>TRANSPORT_WIFI</code>と<code>TRANSPORT_CELLULAR</code>を設定したRequest（コード上での<code>networkRequest</code>）を生成します． 不必要なTypeは設定しないほうがいいです．</p>
+<p>次に<code>registerNetworkCallback</code>で<code>networkCallback</code>をセットすることでMobile Dataへの切り替わりも含むWi-Fiの切り替わりが行われる度にnetworkCallbackが呼ばれることになります．</p>
+<p>コードは以下のようになります⭐️</p>
+<pre class="hljs"><code><div>
+<span class="hljs-keyword">val</span> connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) <span class="hljs-keyword">as</span> ConnectivityManager
+
+<span class="hljs-keyword">val</span> networkRequest = NetworkRequest.Builder()
+        .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+        .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+        .build()
+
+<span class="hljs-keyword">val</span> networkCallback: ConnectivityManager.NetworkCallback =
+    <span class="hljs-keyword">object</span> : ConnectivityManager.NetworkCallback() {
+        <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onAvailable</span><span class="hljs-params">(network: <span class="hljs-type">Network</span>)</span></span> {
+            <span class="hljs-keyword">super</span>.onAvailable(network)
+            <span class="hljs-keyword">val</span> wifiManager: WifiManager = getSystemService(WifiManager::<span class="hljs-class"><span class="hljs-keyword">class</span>.<span class="hljs-title">java</span>) ?: <span class="hljs-type">return</span></span>
+            <span class="hljs-keyword">if</span> (wifiManager.isWifiEnabled) {
+                <span class="hljs-keyword">val</span> ssidText = wifiManager.connectionInfo.ssid.let {
+                    <span class="hljs-comment">// *${SSID}* になっているから．</span>
+                   it.substring(<span class="hljs-number">1</span>, it.length - <span class="hljs-number">1</span>)
+                }
+                <span class="hljs-keyword">val</span> bssidText = wifiManager.connectionInfo.bssid
+　　　　　　　　　 <span class="hljs-comment">// ここではTimberを使ってログを表示させていますが適宜好きに書き換えてください．</span>
+                Timber.d(<span class="hljs-string">"Connected SSID: <span class="hljs-subst">${ssidText}</span>, BSSID: <span class="hljs-subst">${bssidText}</span>"</span>)
+            } <span class="hljs-keyword">else</span> {
+                Timber.d(<span class="hljs-string">"Connected Mobile Data"</span>)
+            }
+        }
+    }
+
+<span class="hljs-comment">// Callbackをセットする</span>
+connectivityManager.registerNetworkCallback(networkRequest, networkCallback)
+
+</div></code></pre>
+<p>上のコードを検知したい間ずっと生き続けてくれる<code>Activity</code>やら<code>Service</code>やらに書きます．自分はアプリが別のアプリの下に行っても動いて欲しかったので<code>Foreground Service</code>に書きました 🌵</p>
+<h2 id="%E5%8B%95%E4%BD%9C%E7%A2%BA%E8%AA%8D">動作確認</h2>
+<p>（実機で行うと個人情報が流出するため）エミュレーターで実行した結果</p>
+<pre class="hljs"><code><div>2021-03-xx xx:xx:xx.xxx ..../com.hunachi.vpnasy D/ObserveNetworkStateService$networkCallback: Connected SSID: AndroidWifi, BSSID: 02:15:b2:00:01:00
+</div></code></pre>
+<p>うまくいってますね🍒</p>
+<p>位置情報の認証等で失敗していると，SSIDは<code>&lt;unknown ssid&gt;</code>にBSSIDは<code>02:00:00:00:00:00</code>になります．
+ここで証明することはできませんが，他のアプリを起動させていてもアプリが終了されない限り正常にWi-Fiの変化を検知し続けてくれます．</p>
+<p>Vpnasyで通知を表示させている時の様子もせっかくなので公開します！</p>
+<p><img src="wifi_screenshot.png" alt="image"></p>
+<h2 id="%E3%81%8A%E3%81%BE%E3%81%91">おまけ</h2>
+<h3 id="foreground-services%E3%81%A7wi-fi%E3%81%AE%E5%A4%89%E5%8C%96%E3%82%92%E6%A4%9C%E7%9F%A5%E3%81%97%E3%81%9F%E3%81%84%E3%81%A8%E3%81%8D%E3%81%AE%E6%A8%A9%E9%99%90%E8%A6%81%E6%B1%82">Foreground ServicesでWi-Fiの変化を検知したいときの権限要求</h3>
+<p>Foreground Servicesを使うために必要な権限は<code>FOREGROUND_SERVICE</code>です．
+SDKがAndroid Q以上の場合はForeground Servicesでの位置情報を有効にする必要があるので追加で<code>FOREGROUND_SERVICE</code>が必要になります．</p>
+<p>これらの権限を要求してきましょう．</p>
+<h3 id="%E6%A8%A9%E9%99%90%E3%81%AE%E8%A6%81%E6%B1%82%E6%96%B9%E6%B3%95%E3%81%A8%E5%AE%9F%E9%9A%9B%E3%81%AE%E3%82%B3%E3%83%BC%E3%83%89">権限の要求方法と実際のコード</h3>
+<p><code>AndroidManifest.xml</code>に以下を追加します．</p>
+<pre class="hljs"><code><div>    <span class="hljs-comment">&lt;!--  さっきと同じ  --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">uses-permission</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">"android.permission.ACCESS_FINE_LOCATION"</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">uses-permission</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">"android.permission.ACCESS_NETWORK_STATE"</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">uses-permission</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">"android.permission.ACCESS_WIFI_STATE"</span> /&gt;</span>
+    <span class="hljs-comment">&lt;!--  これ以降を追加する  --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">uses-permission</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">"android.permission.ACCESS_BACKGROUND_LOCATION"</span> /&gt;</span>
     <span class="hljs-comment">&lt;!--  SDK VersionがQ以上の端末用  --&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">uses-permission</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">"android.permission.FOREGROUND_SERVICE"</span> /&gt;</span>
 </div></code></pre>
-<p>次に任意のActivity等でユーザーに権限をリクエストするダイアログを出すためのコードを書きます．<code>RequestMultiplePermissions</code>を使う方法が綺麗でいいと思います．</p>
+<p>次に任意のActivity等でユーザーに権限をリクエストするダイアログを出すためのコードを書きます．
+複数の権限を要求する際は<code>RequestMultiplePermissions</code>を使う方法が綺麗でいいと思います．</p>
 <p>⚠️リクエストが拒否されたときの実装の説明はここでは省くため，<code>TODO</code>と書いてます⚠️</p>
 <pre class="hljs"><code><div>....
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PermissionRequestActivity</span> : <span class="hljs-type">AppCompatActivity</span></span>() {
@@ -422,57 +503,13 @@ SDKがAndroid Q以上の場合はForeground Servicesでの位置情報を有効�
 ....
 }
 </div></code></pre>
-<p>次は，本題のWi-Fiの変化を検知していきましょう！</p>
-<h2 id="wi-fi%E3%81%AE%E5%A4%89%E5%8C%96%E3%82%92%E6%A4%9C%E7%9F%A5">Wi-Fiの変化を検知</h2>
-<p><code>ConnectivityManager</code>を使います．</p>
-<p><code>TransportType</code>に<code>TRANSPORT_WIFI</code>と<code>TRANSPORT_CELLULAR</code>を設定したRequest（コード上での<code>networkRequest</code>）を生成します． 不必要なTypeは設定しないほうがいいです．</p>
-<p>次に<code>registerNetworkCallback</code>で<code>networkCallback</code>をセットすることでMobile Dataへの切り替わりも含むWi-Fiの切り替わりが行われる度にnetworkCallbackが呼ばれることになります．</p>
-<p>コードは以下のようになります⭐️</p>
-<pre class="hljs"><code><div>
-<span class="hljs-keyword">val</span> connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) <span class="hljs-keyword">as</span> ConnectivityManager
-
-<span class="hljs-keyword">val</span> networkRequest = NetworkRequest.Builder()
-        .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-        .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
-        .build()
-
-<span class="hljs-keyword">val</span> networkCallback: ConnectivityManager.NetworkCallback =
-    <span class="hljs-keyword">object</span> : ConnectivityManager.NetworkCallback() {
-        <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onAvailable</span><span class="hljs-params">(network: <span class="hljs-type">Network</span>)</span></span> {
-            <span class="hljs-keyword">super</span>.onAvailable(network)
-            <span class="hljs-keyword">val</span> wifiManager = getSystemService(Context.WIFI_SERVICE) <span class="hljs-keyword">as</span> WifiManager
-            <span class="hljs-keyword">if</span> (wifiManager.isWifiEnabled) {
-                <span class="hljs-keyword">val</span> ssidText = wifiManager.connectionInfo.ssid.let {
-                    <span class="hljs-comment">// *${SSID}* になっているから．</span>
-                   it.substring(<span class="hljs-number">1</span>, it.length - <span class="hljs-number">1</span>)
-                }
-                <span class="hljs-keyword">val</span> bssidText = wifiManager.connectionInfo.bssid
-　　　　　　　　　 <span class="hljs-comment">// ここではTimberを使ってログを表示させていますが適宜好きに書き換えてください．</span>
-                Timber.d(<span class="hljs-string">"Connected SSID: <span class="hljs-subst">${ssidText}</span>, BSSID: <span class="hljs-subst">${bssidText}</span>"</span>)
-            } <span class="hljs-keyword">else</span> {
-                Timber.d(<span class="hljs-string">"Connected Mobile Data"</span>)
-            }
-        }
-    }
-
-<span class="hljs-comment">// Callbackをセットする</span>
-connectivityManager.registerNetworkCallback(networkRequest, networkCallback)
-
-</div></code></pre>
-<p>上のコードを検知したい間ずっと生き続けてくれる<code>Activity</code>やら<code>Service</code>やらに書きます．自分はアプリが別のアプリの下に行っても動いて欲しかったので<code>Foreground Service</code>に書きました 🌵</p>
-<h2 id="%E5%8B%95%E4%BD%9C%E7%A2%BA%E8%AA%8D">動作確認</h2>
-<p>（実機で行うと個人情報が流出するため）エミュレーターで実行した結果</p>
-<pre class="hljs"><code><div>2021-03-xx xx:xx:xx.xxx ..../com.hunachi.vpnasy D/ObserveNetworkStateService$networkCallback: Connected SSID: AndroidWifi, BSSID: 02:15:b2:00:01:00
-</div></code></pre>
-<p>うまくいってますね🍒</p>
-<p>位置情報の認証等で失敗していると，SSIDは<code>&lt;unknown ssid&gt;</code>にBSSIDは<code>02:00:00:00:00:00</code>になります．
-ここで証明することはできませんが，他のアプリを起動させていてもアプリが終了されない限り正常にWi-Fiの変化を検知し続けてくれます．</p>
-<p>Vpnasyで通知を表示させている時の様子もせっかくなので公開します！</p>
-<p><img src="wifi_screenshot.png" alt="image"></p>
+<p>これで権限周りはバッチリです⭐️</p>
 <h2 id="%E6%9C%80%E5%BE%8C%E3%81%AB">最後に</h2>
 <p>ここまで読んでくださりありがとうございました💞
 誰かのお役に立てれば幸いです💞
 間違え，改善案等ありましたら <a href="https://twitter.com/_hunachi">Hunachi</a> までDMかリプライよろしくお願いいたします🙇‍♀️💦</p>
+<p><code>val wifiManager = getSystemService(Context.WIFI_SERVICE) as WifiManager</code>と書いていた部分を
+<code>val wifiManager: WifiManager = getSystemService(WifiManager::class.java) ?: return</code>に修正しました（getSystemServiceはNullableなのに危ない..）．Twitterで @fkm さん と @Pooh3Mobi さん にアドバイスいただきました．ありがとうございます！！</p>
 <h2 id="%E5%8F%82%E8%80%83%E3%81%AB%E3%81%97%E3%81%9F%E3%82%B5%E3%82%A4%E3%83%88">参考にしたサイト</h2>
 <p>https://developer.android.com/reference/android/net/wifi/WifiInfo</p>
 <p>https://developer.android.com/reference/android/net/ConnectivityManager.NetworkCallback</p>
