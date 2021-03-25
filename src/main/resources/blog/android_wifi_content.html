@@ -414,7 +414,7 @@ code {
 <p>次に<code>registerNetworkCallback</code>で<code>networkCallback</code>をセットすることでMobile Dataへの切り替わりも含むWi-Fiの切り替わりが行われる度にnetworkCallbackが呼ばれることになります．</p>
 <p>コードは以下のようになります⭐️</p>
 <pre class="hljs"><code><div>
-<span class="hljs-keyword">val</span> connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) <span class="hljs-keyword">as</span> ConnectivityManager
+<span class="hljs-keyword">val</span> connectivityManager: ConnectivityManager = getSystemService(ConnectivityManager::<span class="hljs-class"><span class="hljs-keyword">class</span>.<span class="hljs-title">java</span>) ?: <span class="hljs-type">return</span></span>
 
 <span class="hljs-keyword">val</span> networkRequest = NetworkRequest.Builder()
         .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
@@ -508,8 +508,8 @@ SDKがAndroid Q以上の場合はForeground Servicesでの位置情報を有効�
 <p>ここまで読んでくださりありがとうございました💞
 誰かのお役に立てれば幸いです💞
 間違え，改善案等ありましたら <a href="https://twitter.com/_hunachi">Hunachi</a> までDMかリプライよろしくお願いいたします🙇‍♀️💦</p>
-<p><code>val wifiManager = getSystemService(Context.WIFI_SERVICE) as WifiManager</code>と書いていた部分を
-<code>val wifiManager: WifiManager = getSystemService(WifiManager::class.java) ?: return</code>に修正しました（getSystemServiceはNullableなのに危ない..）．Twitterで @fkm さん と @Pooh3Mobi さん にアドバイスいただきました．ありがとうございます！！</p>
+<p><code>val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager</code>と書いていた部分を
+<code>val connectivityManager: ConnectivityManager = getSystemService(ConnectivityManager::class.java) ?: return</code>に修正しました（getSystemServiceはNullableなのに危ない..）．Twitterで @fkm さん と @Pooh3Mobi さん にアドバイスいただきました．ありがとうございます！！</p>
 <h2 id="%E5%8F%82%E8%80%83%E3%81%AB%E3%81%97%E3%81%9F%E3%82%B5%E3%82%A4%E3%83%88">参考にしたサイト</h2>
 <p>https://developer.android.com/reference/android/net/wifi/WifiInfo</p>
 <p>https://developer.android.com/reference/android/net/ConnectivityManager.NetworkCallback</p>
