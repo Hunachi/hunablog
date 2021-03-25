@@ -20,8 +20,6 @@
 まずはAndroidアプリ開発においてお馴染みの権限の要求からです！
 
 Wi-FiのSSIDを取得するのに必要な権限は`ACCESS_NETWORK_STATE`と`ACCESS_FINE_LOCATION`と`ACCESS_WIFI_STATE` です．
-Foreground Servicesを使うために必要な権限は`FOREGROUND_SERVICE`です．
-SDKがAndroid Q以上の場合はForeground Servicesでの位置情報を有効にする必要があるので追加で`FOREGROUND_SERVICE`が必要になります．
 
 これらの権限を要求してきましょう．
 
@@ -30,14 +28,12 @@ SDKがAndroid Q以上の場合はForeground Servicesでの位置情報を有効�
 
 ```xml
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!--  SDK VersionがQ以上の端末用  -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 ```
 
-次に任意のActivity等でユーザーに権限をリクエストするダイアログを出すためのコードを書きます．`RequestMultiplePermissions`を使う方法が綺麗でいいと思います．
+次に任意のActivity等でユーザーに権限をリクエストするダイアログを出すためのコードを書きます．
+今回は，権限を1つしかリクエストしないので`RequestPermission`を使います．
 
 ⚠️リクエストが拒否されたときの実装の説明はここでは省くため，`TODO`と書いてます⚠️
 
@@ -46,28 +42,17 @@ SDKがAndroid Q以上の場合はForeground Servicesでの位置情報を有効�
 class PermissionRequestActivity : AppCompatActivity() {
 ....
      private fun requestPermission(){
-        val requiredPermissions = when {
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q -> arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION
-            )
-            else -> arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
-        }
-        requestPermissionLauncher.launch(requiredPermissions)
+        requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
     }
     
     private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
+        ActivityResultContracts.RequestPermission()
     ) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && it[Manifest.permission.ACCESS_BACKGROUND_LOCATION] != true) {
-            // TODO:Request Permission Again.
-            return@registerForActivityResult
+        if (it) {
+            // Success.
+            return@registerForActivityResult 
         }
-        if (it[Manifest.permission.ACCESS_FINE_LOCATION] != true) {
-            // TODO:Request Permission Again.
-            return@registerForActivityResult
-        }
-        // Success.
+        // TODO:Request Permission Again.
     }
 ....
 }
@@ -98,7 +83,7 @@ val networkCallback: ConnectivityManager.NetworkCallback =
     object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
             super.onAvailable(network)
-            val wifiManager = getSystemService(Context.WIFI_SERVICE) as WifiManager
+            val wifiManager: WifiManager = getSystemService(WifiManager::class.java) ?: return
             if (wifiManager.isWifiEnabled) {
                 val ssidText = wifiManager.connectionInfo.ssid.let {
                     // *${SSID}* になっているから．
@@ -137,12 +122,77 @@ Vpnasyで通知を表示させている時の様子もせっかくなので公�
 
 ![image](wifi_screenshot.png)
 
+## おまけ
+
+### Foreground ServicesでWi-Fiの変化を検知したいときの権限要求
+
+Foreground Servicesを使うために必要な権限は`FOREGROUND_SERVICE`です．
+SDKがAndroid Q以上の場合はForeground Servicesでの位置情報を有効にする必要があるので追加で`FOREGROUND_SERVICE`が必要になります．
+
+これらの権限を要求してきましょう．
+
+### 権限の要求方法と実際のコード
+`AndroidManifest.xml`に以下を追加します．
+
+```xml
+    <!--  さっきと同じ  -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!--  これ以降を追加する  -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <!--  SDK VersionがQ以上の端末用  -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+```
+
+次に任意のActivity等でユーザーに権限をリクエストするダイアログを出すためのコードを書きます．
+複数の権限を要求する際は`RequestMultiplePermissions`を使う方法が綺麗でいいと思います．
+
+⚠️リクエストが拒否されたときの実装の説明はここでは省くため，`TODO`と書いてます⚠️
+
+```kotlin
+....
+class PermissionRequestActivity : AppCompatActivity() {
+....
+     private fun requestPermission(){
+        val requiredPermissions = when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q -> arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION
+            )
+            else -> arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+        requestPermissionLauncher.launch(requiredPermissions)
+    }
+    
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && it[Manifest.permission.ACCESS_BACKGROUND_LOCATION] != true) {
+            // TODO:Request Permission Again.
+            return@registerForActivityResult
+        }
+        if (it[Manifest.permission.ACCESS_FINE_LOCATION] != true) {
+            // TODO:Request Permission Again.
+            return@registerForActivityResult
+        }
+        // Success.
+    }
+....
+}
+```
+これで権限周りはバッチリです⭐️
 
 ## 最後に
 
 ここまで読んでくださりありがとうございました💞
 誰かのお役に立てれば幸いです💞
 間違え，改善案等ありましたら [Hunachi](https://twitter.com/_hunachi) までDMかリプライよろしくお願いいたします🙇‍♀️💦
+
+
+`val wifiManager = getSystemService(Context.WIFI_SERVICE) as WifiManager`と書いていた部分を
+`val wifiManager: WifiManager = getSystemService(WifiManager::class.java) ?: return`に修正しました（getSystemServiceはNullableなのに危ない..）．Twitterで @fkm さん と @Pooh3Mobi さん にアドバイスいただきました．ありがとうございます！！
+
 
 ## 参考にしたサイト
 https://developer.android.com/reference/android/net/wifi/WifiInfo
