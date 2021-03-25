@@ -72,7 +72,7 @@ class PermissionRequestActivity : AppCompatActivity() {
 
 ```kotlin
 
-val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+val connectivityManager: ConnectivityManager = getSystemService(ConnectivityManager::class.java) ?: return
 
 val networkRequest = NetworkRequest.Builder()
         .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
@@ -190,8 +190,8 @@ class PermissionRequestActivity : AppCompatActivity() {
 間違え，改善案等ありましたら [Hunachi](https://twitter.com/_hunachi) までDMかリプライよろしくお願いいたします🙇‍♀️💦
 
 
-`val wifiManager = getSystemService(Context.WIFI_SERVICE) as WifiManager`と書いていた部分を
-`val wifiManager: WifiManager = getSystemService(WifiManager::class.java) ?: return`に修正しました（getSystemServiceはNullableなのに危ない..）．Twitterで @fkm さん と @Pooh3Mobi さん にアドバイスいただきました．ありがとうございます！！
+`val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager`と書いていた部分を
+`val connectivityManager: ConnectivityManager = getSystemService(ConnectivityManager::class.java) ?: return`に修正しました（getSystemServiceはNullableなのに危ない..）．Twitterで @fkm さん と @Pooh3Mobi さん にアドバイスいただきました．ありがとうございます！！
 
 
 ## 参考にしたサイト
