@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>android_wifi_content.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="android%E3%82%A2%E3%83%97%E3%83%AA%E3%81%A7wi-fi%E3%81%AE%E5%A4%89%E5%8C%96%E3%82%92%E6%A4%9C%E7%9F%A5%E3%81%99%E3%82%8B">AndroidアプリでWi-Fiの変化を検知する</h1>
+<p>私ごとですが <a href="https://sechack365.nict.go.jp/">SecHack365</a> というイベントに参加しVpnasyというアプリを作成しました．
+（詳細が書いてある <a href="https://sechack365.nict.go.jp/achievement/2020/img/2020_14_l.jpg">ポスター</a> と <a href="https://sechack365.nict.go.jp/achievement/2020/">2020年の修了生の作品一覧</a> ）</p>
+<p>このアプリは繋がっているWi-Fi（家のWi-Fiなのか，外のFree Wi-Fiなのか等）によって自動で事前に設定した通りにVPNの設定を切り替えてくれるAndroidアプリです． Vpnasyの全体のコードはメンテ中のためまだ公開されていません．公開したら不味いところがないかの確認などを終わらせ次第公開します！</p>
+<p>このアプリを作るにあたって接続しているWi-Fi（またはMobile Data）が切り替わったことを自動で認識しVPNを貼り直すという実装を行ったため，その方法をこれから説明します⭐️
+因みにWi-Fiの種類はWi-Fiの<code>SSID</code>と<code>BSSID</code>を使い判断しています⚠️</p>
+<p>では早速説明していきます．</p>
+<h2 id="%E6%9C%80%E5%88%9D%E3%81%AB">最初に</h2>
+<p>今からの説明に書いているコードのうち<code>....</code>と書いている部分は<code>Wi-Fiの変化を検知する</code>の実装固有のものでないコードが入ります．
+それらのコードを省略している為コードをコピペしただけではダメな場合があります．ご了承ください💦</p>
+<h2 id="%E5%BF%85%E8%A6%81%E3%81%AA%E6%A8%A9%E9%99%90%E3%81%AE%E8%A6%81%E6%B1%82">必要な権限の要求</h2>
+<p>まずはAndroidアプリ開発においてお馴染みの権限の要求からです！</p>
+<p>Wi-FiのSSIDを取得するのに必要な権限は<code>ACCESS_NETWORK_STATE</code>と<code>ACCESS_FINE_LOCATION</code>と<code>ACCESS_WIFI_STATE</code> です．
+Foreground Servicesを使うために必要な権限は<code>FOREGROUND_SERVICE</code>です．
+SDKがAndroid Q以上の場合はForeground Servicesでの位置情報を有効にする必要があるので追加で<code>FOREGROUND_SERVICE</code>が必要になります．</p>
+<p>これらの権限を要求してきましょう．</p>
+<h3 id="%E6%A8%A9%E9%99%90%E3%81%AE%E8%A6%81%E6%B1%82%E6%96%B9%E6%B3%95%E3%81%A8%E5%AE%9F%E9%9A%9B%E3%81%AE%E3%82%B3%E3%83%BC%E3%83%89">権限の要求方法と実際のコード</h3>
+<p><code>AndroidManifest.xml</code>に以下を追加します．</p>
+<pre class="hljs"><code><div>    <span class="hljs-tag">&lt;<span class="hljs-name">uses-permission</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">"android.permission.ACCESS_FINE_LOCATION"</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">uses-permission</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">"android.permission.ACCESS_BACKGROUND_LOCATION"</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">uses-permission</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">"android.permission.ACCESS_NETWORK_STATE"</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">uses-permission</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">"android.permission.ACCESS_WIFI_STATE"</span> /&gt;</span>
+    <span class="hljs-comment">&lt;!--  SDK VersionがQ以上の端末用  --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">uses-permission</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">"android.permission.FOREGROUND_SERVICE"</span> /&gt;</span>
+</div></code></pre>
+<p>次に任意のActivity等でユーザーに権限をリクエストするダイアログを出すためのコードを書きます．<code>RequestMultiplePermissions</code>を使う方法が綺麗でいいと思います．</p>
+<p>⚠️リクエストが拒否されたときの実装の説明はここでは省くため，<code>TODO</code>と書いてます⚠️</p>
+<pre class="hljs"><code><div>....
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PermissionRequestActivity</span> : <span class="hljs-type">AppCompatActivity</span></span>() {
+....
+     <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">requestPermission</span><span class="hljs-params">()</span></span>{
+        <span class="hljs-keyword">val</span> requiredPermissions = <span class="hljs-keyword">when</span> {
+            Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.Q -&gt; arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION
+            )
+            <span class="hljs-keyword">else</span> -&gt; arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+        requestPermissionLauncher.launch(requiredPermissions)
+    }
+    
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) {
+        <span class="hljs-keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.Q &amp;&amp; it[Manifest.permission.ACCESS_BACKGROUND_LOCATION] != <span class="hljs-literal">true</span>) {
+            <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span>Request Permission Again.</span>
+            <span class="hljs-keyword">return</span><span class="hljs-symbol">@registerForActivityResult</span>
+        }
+        <span class="hljs-keyword">if</span> (it[Manifest.permission.ACCESS_FINE_LOCATION] != <span class="hljs-literal">true</span>) {
+            <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span>Request Permission Again.</span>
+            <span class="hljs-keyword">return</span><span class="hljs-symbol">@registerForActivityResult</span>
+        }
+        <span class="hljs-comment">// Success.</span>
+    }
+....
+}
+</div></code></pre>
+<p>次は，本題のWi-Fiの変化を検知していきましょう！</p>
+<h2 id="wi-fi%E3%81%AE%E5%A4%89%E5%8C%96%E3%82%92%E6%A4%9C%E7%9F%A5">Wi-Fiの変化を検知</h2>
+<p><code>ConnectivityManager</code>を使います．</p>
+<p><code>TransportType</code>に<code>TRANSPORT_WIFI</code>と<code>TRANSPORT_CELLULAR</code>を設定したRequest（コード上での<code>networkRequest</code>）を生成します． 不必要なTypeは設定しないほうがいいです．</p>
+<p>次に<code>registerNetworkCallback</code>で<code>networkCallback</code>をセットすることでMobile Dataへの切り替わりも含むWi-Fiの切り替わりが行われる度にnetworkCallbackが呼ばれることになります．</p>
+<p>コードは以下のようになります⭐️</p>
+<pre class="hljs"><code><div>
+<span class="hljs-keyword">val</span> connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) <span class="hljs-keyword">as</span> ConnectivityManager
+
+<span class="hljs-keyword">val</span> networkRequest = NetworkRequest.Builder()
+        .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+        .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+        .build()
+
+<span class="hljs-keyword">val</span> networkCallback: ConnectivityManager.NetworkCallback =
+    <span class="hljs-keyword">object</span> : ConnectivityManager.NetworkCallback() {
+        <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onAvailable</span><span class="hljs-params">(network: <span class="hljs-type">Network</span>)</span></span> {
+            <span class="hljs-keyword">super</span>.onAvailable(network)
+            <span class="hljs-keyword">val</span> wifiManager = getSystemService(Context.WIFI_SERVICE) <span class="hljs-keyword">as</span> WifiManager
+            <span class="hljs-keyword">if</span> (wifiManager.isWifiEnabled) {
+                <span class="hljs-keyword">val</span> ssidText = wifiManager.connectionInfo.ssid.let {
+                    <span class="hljs-comment">// *${SSID}* になっているから．</span>
+                   it.substring(<span class="hljs-number">1</span>, it.length - <span class="hljs-number">1</span>)
+                }
+                <span class="hljs-keyword">val</span> bssidText = wifiManager.connectionInfo.bssid
+　　　　　　　　　 <span class="hljs-comment">// ここではTimberを使ってログを表示させていますが適宜好きに書き換えてください．</span>
+                Timber.d(<span class="hljs-string">"Connected SSID: <span class="hljs-subst">${ssidText}</span>, BSSID: <span class="hljs-subst">${bssidText}</span>"</span>)
+            } <span class="hljs-keyword">else</span> {
+                Timber.d(<span class="hljs-string">"Connected Mobile Data"</span>)
+            }
+        }
+    }
+
+<span class="hljs-comment">// Callbackをセットする</span>
+connectivityManager.registerNetworkCallback(networkRequest, networkCallback)
+
+</div></code></pre>
+<p>上のコードを検知したい間ずっと生き続けてくれる<code>Activity</code>やら<code>Service</code>やらに書きます．自分はアプリが別のアプリの下に行っても動いて欲しかったので<code>Foreground Service</code>に書きました 🌵</p>
+<h2 id="%E5%8B%95%E4%BD%9C%E7%A2%BA%E8%AA%8D">動作確認</h2>
+<p>（実機で行うと個人情報が流出するため）エミュレーターで実行した結果</p>
+<pre class="hljs"><code><div>2021-03-xx xx:xx:xx.xxx ..../com.hunachi.vpnasy D/ObserveNetworkStateService$networkCallback: Connected SSID: AndroidWifi, BSSID: 02:15:b2:00:01:00
+</div></code></pre>
+<p>うまくいってますね🍒</p>
+<p>位置情報の認証等で失敗していると，SSIDは<code>&lt;unknown ssid&gt;</code>にBSSIDは<code>02:00:00:00:00:00</code>になります．
+ここで証明することはできませんが，他のアプリを起動させていてもアプリが終了されない限り正常にWi-Fiの変化を検知し続けてくれます．</p>
+<p>Vpnasyで通知を表示させている時の様子もせっかくなので公開します！</p>
+<p><img src="wifi_screenshot.png" alt="image"></p>
+<h2 id="%E6%9C%80%E5%BE%8C%E3%81%AB">最後に</h2>
+<p>ここまで読んでくださりありがとうございました💞
+誰かのお役に立てれば幸いです💞
+間違え，改善案等ありましたら <a href="https://twitter.com/_hunachi">Hunachi</a> までDMかリプライよろしくお願いいたします🙇‍♀️💦</p>
+<h2 id="%E5%8F%82%E8%80%83%E3%81%AB%E3%81%97%E3%81%9F%E3%82%B5%E3%82%A4%E3%83%88">参考にしたサイト</h2>
+<p>https://developer.android.com/reference/android/net/wifi/WifiInfo</p>
+<p>https://developer.android.com/reference/android/net/ConnectivityManager.NetworkCallback</p>
+
+</body>
+</html>
