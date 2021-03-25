@@ -127,7 +127,7 @@ Vpnasyで通知を表示させている時の様子もせっかくなので公�
 ### Foreground ServicesでWi-Fiの変化を検知したいときの権限要求
 
 Foreground Servicesを使うために必要な権限は`FOREGROUND_SERVICE`です．
-SDKがAndroid Q以上の場合はForeground Servicesでの位置情報を有効にする必要があるので追加で`FOREGROUND_SERVICE`が必要になります．
+SDKがAndroid Q以上の場合はForeground Servicesでの位置情報を有効にする時に追加で`ACCESS_BACKGROUND_LOCATION`が必要になります．
 
 これらの権限を要求してきましょう．
 
