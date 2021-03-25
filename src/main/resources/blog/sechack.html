@@ -7,6 +7,20 @@
     <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <style>
+        html {
+            height: 100%;
+        }
+
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
+        iframe {
+            width: 100%;
+            display: block;
+        }
+
         .hunachi-theme {
             --mdc-theme-primary: #458766;
             --mdc-theme-secondary: #BFEB55;
@@ -14,44 +28,53 @@
         }
 
         .toolbar-most-right-item {
-            margin-right: 24px;
-        }
-
-        .toolbar-item {
             margin-right: 16px;
         }
 
-        body {
-            margin: 0px;
+        .toolbar-item {
+            margin-right: 8px;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
+        .my-card {
+            height: 350px;
+            width: 350px;
         }
 
-        .imgbox {
-            display: grid;
+        .list-content {
+            padding-left: 56px;
+            padding-right: 56px;
+            padding-bottom: 24px;
+        }
+
+        .my-card-content {
+            margin-top: 16px;
+            height: auto;
+            width: available;
+        }
+
+        .my-card-primary-text {
+            text-align: left;
+            margin-top: 24px;
+            font-size: xx-large;
+            align-self: start;
+        }
+
+        .my-card-secondary-text {
+            text-align: left;
+            margin-bottom: 16px;
+            margin-top: 8px;
+            font-size: medium;
+            align-self: start;
+            height: max-content;
+        }
+
+        .maxsize-content {
             height: 100%;
-        }
-
-        .center-fit {
-            max-width: 120%;
-            max-height: 100vh;
-            margin: auto;
-            align-self: center;
-        }
-
-        .test-content {
-            padding-left: 50px;
-            padding-right: 50px;
-            padding-bottom: 100px;
         }
     </style>
 </head>
-<div id="root" class="hunachi-theme">
-
-    <header class="mdc-top-app-bar" style="top: 0">
+<div id="root" class="hunachi-theme maxsize-content">
+    <header class="mdc-top-app-bar" style="top: 0px">
         <div class="mdc-top-app-bar__row">
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end">
                 <button id="molcarToolbarButton" class="mdc-button mdc-top-app-bar__action-item toolbar-item"
@@ -60,13 +83,12 @@
                     <span class="mdc-button__label">Molcar</span>
                 </button>
                 <button id="profileToolbarButton" class="mdc-button mdc-top-app-bar__action-item toolbar-item"
-                        onclick="location.href='/profile/'">
+                        onclick="location.href='/profile/index.html'">
                     <i class="material-icons mdc-button__icon" aria-hidden="true">person</i>
                     <span class="mdc-button__label">Profile</span>
                 </button>
-                <button id="blogToolbarButton"
-                        class="toolbar-most-right-item mdc-button mdc-top-app-bar__action-item"
-                        onclick="location.href='/blog/'">
+                <button id="blogToolbarButton" class="toolbar-most-right-item mdc-button mdc-top-app-bar__action-item"
+                        onclick="location.href='/blog/index.html'">
                     <i class="material-icons mdc-button__icon" aria-hidden="true">computer</i>
                     <span class="mdc-button__label">Blog</span>
                 </button>
@@ -74,8 +96,8 @@
         </div>
     </header>
 
-    <div class="mdc-top-app-bar--fixed-adjust imgbox">
-        <img class="center-fit" src="bg_image.jpg" alt="neko">
+    <div class="mdc-top-app-bar--fixed-adjust maxsize-content">
+        ♡♡ no content ♡♡
     </div>
 </div>
 
@@ -83,3 +105,4 @@
 <script>mdc.autoInit()</script>
 </body>
 </html>
+

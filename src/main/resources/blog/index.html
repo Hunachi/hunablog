@@ -52,7 +52,8 @@
         .my-card-secondary-text {
             text-align: left;
             margin-bottom: 16px;
-            margin-top: 8px;
+            margin-top: 16px;
+            color: dimgray;
             font-size: medium;
             align-self: start;
             height: max-content;
@@ -84,23 +85,15 @@
 
     <div class="mdc-top-app-bar--fixed-adjust list-content">
         <ul class="mdc-list mdc-list--two-line">
-            <li class="mdc-list-item mdc-card my-card-content" style="height: 150px" tabindex="0">
+            <li onclick="location.href='first_blog.html'" class="mdc-list-item mdc-card my-card-content"
+                style="height: 150px" tabindex="0">
                 <span class="mdc-list-item__ripple"></span>
                 <span class="mdc-list-item__text"></span>
-                <span class="my-card-primary-text">First Blog</span>
-                <span class="my-card-secondary-text mdc-list-item__secondary-text">Secondary text</span>
-            </li>
-            <li class="mdc-list-item mdc-card my-card-content" style="height: 150px" tabindex="1">
-                <span class="mdc-list-item__ripple"></span>
-                <span class="mdc-list-item__text"></span>
-                <span class="my-card-primary-text mdc-list-item__primary-text">Second Blog</span>
-                <span class="my-card-secondary-text mdc-list-item__secondary-text">Secondary text</span>
-            </li>
-            <li class="mdc-list-item mdc-card my-card-content" style="height: 150px" tabindex="2">
-                <span class="mdc-list-item__ripple"></span>
-                <span class="mdc-list-item__text"></span>
-                <span class="my-card-primary-text mdc-list-item__primary-text">Third Blog</span>
-                <span class="my-card-secondary-text mdc-list-item__secondary-text">Secondary text</span>
+                <span class="my-card-primary-text mdc-list-item__primary-text">ブログを作りました！</span>
+                <p class="my-card-secondary-text" style="word-break: keep-all;">
+                    こんにちはふなちです！今まで Hatena Blog でのブログ(http://hanahanahunachi.hatenablog.com/)
+                    を卒業しようと思ったのとポートフォリオが欲しかったので，このブログを作りました ．
+                </p>
             </li>
         </ul>
     </div>
@@ -110,4 +103,6 @@
 <script>mdc.autoInit()</script>
 </body>
 </html>
+
+
 

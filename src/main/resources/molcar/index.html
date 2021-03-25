@@ -52,6 +52,7 @@
     </style>
 </head>
 <div id="root" class="hunachi-theme">
+
     <header class="mdc-top-app-bar" style="top: 0">
         <div class="mdc-top-app-bar__row">
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end">
@@ -65,20 +66,17 @@
                     <i class="material-icons mdc-button__icon" aria-hidden="true">person</i>
                     <span class="mdc-button__label">Profile</span>
                 </button>
-                <!-- あとで消す -->
-                <a href="https://hanahanahunachi.hatenablog.com/">
-                    <button id="blogToolbarButton"
-                            class="toolbar-most-right-item mdc-button mdc-top-app-bar__action-item"
-                            onclick="location.href='/blog/'">
-                        <i class="material-icons mdc-button__icon" aria-hidden="true">computer</i>
-                        <span class="mdc-button__label">Blog</span>
-                    </button>
-                </a>
+                <button id="blogToolbarButton"
+                        class="toolbar-most-right-item mdc-button mdc-top-app-bar__action-item"
+                        onclick="location.href='/blog/'">
+                    <i class="material-icons mdc-button__icon" aria-hidden="true">computer</i>
+                    <span class="mdc-button__label">Blog</span>
+                </button>
             </section>
         </div>
     </header>
 
-    <div class="mdc-top-app-bar--fixed-adjust imgbox">
+    <div class="mdc-top-app-bar--fixed-adjust">
         <canvas id="myCanvas"></canvas>
     </div>
 </div>
