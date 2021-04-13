@@ -115,7 +115,7 @@ connectivityManager.registerNetworkCallback(networkRequest, networkCallback)
 
 うまくいってますね🍒
 
-位置情報の認証等で失敗していると，SSIDは`<unknown ssid>`にBSSIDは`02:00:00:00:00:00`になります．
+位置情報の権限取得等で失敗していると，SSIDは`<unknown ssid>`にBSSIDは`02:00:00:00:00:00`になります．
 ここで証明することはできませんが，他のアプリを起動させていてもアプリが終了されない限り正常にWi-Fiの変化を検知し続けてくれます．
 
 Vpnasyで通知を表示させている時の様子もせっかくなので公開します！
