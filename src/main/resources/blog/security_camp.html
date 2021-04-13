@@ -7,6 +7,20 @@
     <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <style>
+        html {
+            height: 100%;
+        }
+
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
+        iframe {
+            width: 100%;
+            display: block;
+        }
+
         .hunachi-theme {
             --mdc-theme-primary: #458766;
             --mdc-theme-secondary: #BFEB55;
@@ -19,10 +33,6 @@
 
         .toolbar-item {
             margin-right: 8px;
-        }
-
-        body {
-            margin: 0px;
         }
 
         .my-card {
@@ -52,15 +62,18 @@
         .my-card-secondary-text {
             text-align: left;
             margin-bottom: 16px;
-            margin-top: 16px;
-            color: dimgray;
+            margin-top: 8px;
             font-size: medium;
             align-self: start;
             height: max-content;
         }
+
+        .maxsize-content {
+            height: 100%;
+        }
     </style>
 </head>
-<div id="root" class="hunachi-theme">
+<div id="root" class="hunachi-theme maxsize-content">
     <header class="mdc-top-app-bar" style="top: 0px">
         <div class="mdc-top-app-bar__row">
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end">
@@ -83,37 +96,8 @@
         </div>
     </header>
 
-    <div class="mdc-top-app-bar--fixed-adjust list-content">
-        <ul class="mdc-list mdc-list--two-line">
-            <li onclick="location.href='first_blog.html'" class="mdc-list-item mdc-card my-card-content"
-                style="height: 150px" tabindex="0">
-                <span class="mdc-list-item__ripple"></span>
-                <span class="mdc-list-item__text"></span>
-                <span class="my-card-primary-text mdc-list-item__primary-text">ブログを作りました！</span>
-                <p class="my-card-secondary-text" style="word-break: keep-all;">
-                    こんにちはふなちです！今まで Hatena Blog でのブログ(http://hanahanahunachi.hatenablog.com/)
-                    を卒業しようと思ったのとポートフォリオが欲しかったので，このブログを作りました ．
-                </p>
-            </li>
-            <li onclick="location.href='android_wifi.html'" class="mdc-list-item mdc-card my-card-content"
-                style="height: 150px" tabindex="0">
-                <span class="mdc-list-item__ripple"></span>
-                <span class="mdc-list-item__text"></span>
-                <span class="my-card-primary-text mdc-list-item__primary-text">AndroidアプリでWi-Fiの変化を検知する</span>
-                <p class="my-card-secondary-text" style="word-break: keep-all;">
-                    私ごとですが [SecHack365](https://sechack365.nict.go.jp/) というイベントに参加しVpnasyというアプリを作成しました．
-                </p>
-            </li>
-            <li onclick="location.href='security_camp.html'" class="mdc-list-item mdc-card my-card-content"
-                style="height: 150px" tabindex="0">
-                <span class="mdc-list-item__ripple"></span>
-                <span class="mdc-list-item__text"></span>
-                <span class="my-card-primary-text mdc-list-item__primary-text">セキュリティ・キャンプ全国大会2020 オンラインに参加した時の感想</span>
-                <p class="my-card-secondary-text" style="word-break: keep-all;">
-                    プロダクトセキュリティトラックで応募しました．応募時に何を書いたか詳細は覚えてませんが任意問題は半分も解いてない気がします．よく受かったものだ．
-                </p>
-            </li>
-        </ul>
+    <div class="mdc-top-app-bar--fixed-adjust maxsize-content">
+        <iframe src="security_camp_content.html" class="maxsize-content"></iframe>
     </div>
 </div>
 
@@ -121,6 +105,4 @@
 <script>mdc.autoInit()</script>
 </body>
 </html>
-
-
 
